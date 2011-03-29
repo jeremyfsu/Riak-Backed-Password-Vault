@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <script src="/riak/vault/jquery.js"></script>
+        <script src="/riak/vault/json2.js"></script>
+        <script src="/riak/vault/riak.js"></script>
+        <script>
+            $('#search').submit(function() {
+                $("result").text = $("input:first").val()
+            });
+        </script>
+    </head>
+    <body>
+        <form id="search">
+            Key to find: <input type="text" />
+            <input type="submit" value="Find" />
+        </form>
+        <div id="result">
+
+        </div>
+    </body>
+</html>
