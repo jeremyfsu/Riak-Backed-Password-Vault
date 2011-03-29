@@ -1,0 +1,7 @@
+Riak Backed Password Vault
+
+This is mostly a project to help me learn about Riak, a no-sql distributed document database. 
+With this I will also need to explore and use one of the two javascript client libraries for 
+Riak.
+
+
