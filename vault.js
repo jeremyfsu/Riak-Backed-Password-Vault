@@ -38,9 +38,9 @@ function get_value(object){
 }
 function list_keys(){
     client = new RiakClient();
-    var bucket = new RiakBucket(name, client);
+    var bucket = new RiakBucket('passwords', client);
     bucket.keys(function(keys){
-        $('#errors').text(keys);
+        $('#errors').text(JSON.stringify(keys))
     });
 
 }
