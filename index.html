@@ -4,8 +4,9 @@
         <script src="/riak/vault/json2.js"></script>
         <script src="/riak/vault/riak.js"></script>
         <script src="/riak/vault/gibberish-aes.min.js"></script>
+        <script src="/riak/vault/vault.js"></script>
     </head>
-    <body>
+    <body onload="list_keys();">
         <form id="search" action="index.html">
             Key: <input type="text" id="key" /><br />
             Passphrase: <input type="password" id="secret" /><br />
@@ -13,48 +14,6 @@
             <input type="button" value="Find" onclick="find();"/>
             <input type="button" value="Save" onclick="save();"/>
         </form>
-        <div id="errors">
-
-        </div>
+        <div id="errors"></div>
     </body>
-    <script>
-        function find() {
-            client = new RiakClient();
-            client.bucket('passwords', function(b){get_object(b);});
-        }
-
-        function save(){
-            client = new RiakClient();
-            client.bucket('passwords', function(b){get_or_new_object(b);});
-            $('#errors').text('Password stored');
-        }
-
-        function get_or_new_object(bucket){
-            bucket.get_or_new($('input#key').val(), function(status, o){save_object(o);});
-        }
-
-        function save_object(object){
-            encrypted = GibberishAES.enc($('input#value').val(), $('input#secret').val());
-            object.body = encrypted;
-            object.contentType = 'text/plain';
-            object.store();
-            $('input#value').val(encrypted);
-        }
-
-        function get_object(bucket){
-            bucket.get($('input#key').val(), function(s,o){get_value(o);});
-        }
-
-        function get_value(object){
-            try {
-                decrypted = GibberishAES.dec(object.body, $('input#secret').val());
-                $('input#value').val(decrypted);
-                $('#errors').text("");
-            }
-            catch(e) {
-                $('#errors').text("Error decrypting, passphrase may be incorrect");
-                $('input#value').val("");
-            }
-        }
-    </script>
 </html>
