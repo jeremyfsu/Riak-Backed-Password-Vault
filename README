@@ -15,9 +15,14 @@ Your passwords are stored in a bucket called "passwords" and are encrypted with
 256 bit AES (the default for GibberishAES). Other levels of AES are available,
 see the Gibberish documentaion on GibberishAES for details.
 
-I'm currently re-writing this and making use of SugarSkull, a JS routing library, and MicroJungle, 
-a JS templating library.  I'm also adding the ability to list the contents of the password bucket 
-and have "one-click" decryption.
+I'm going to deploy a Riak server on my laptop as well as my desktop, and attempt to
+link them up. Ideally I'd like to be able to store passwords at my desktop, and
+retrieve them from my laptop and vice versa. My laptop's IP can change, so will Riak
+sync up when my laptop is on the home LAN? Or can I expose my Riak DB to the internet
+and my laptop find it at home?  I still need to learn more about Riak's distibuted features.
+
+I think I might re-write this app to use Amazon S3, just for the academic benefit.
+
 
 
 
