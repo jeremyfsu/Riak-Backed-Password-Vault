@@ -1,12 +1,14 @@
-<html>
+<!DOCTYPE html>
     <head>
+        <script src="/riak/vault/microjungle.min.js"></script>
         <script src="/riak/vault/jquery.js"></script>
         <script src="/riak/vault/json2.js"></script>
         <script src="/riak/vault/riak.js"></script>
         <script src="/riak/vault/gibberish-aes.min.js"></script>
+        <script src="/riak/vault/SS.min.js"></script>
         <script src="/riak/vault/vault.js"></script>
     </head>
-    <body onload="list_keys();">
+    <body>
         <form id="search" action="index.html">
             Key: <input type="text" id="key" /><br />
             Passphrase: <input type="password" id="secret" /><br />
@@ -15,5 +17,5 @@
             <input type="button" value="Save" onclick="save();"/>
         </form>
         <div id="errors"></div>
+        <div id="key_list"></div>
     </body>
-</html>

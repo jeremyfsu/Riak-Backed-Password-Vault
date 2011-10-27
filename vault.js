@@ -36,11 +36,48 @@ function get_value(object){
         $('input#value').val("");
     }
 }
+
+//---------------------BEGIN NEW STUFF
+function fetch(key){
+    client = new RiakClient();
+    client.bucket('passwords', function(bucket){
+        bucket.get(key, function(s,o){
+            try {
+                decrypted = GibberishAES.dec(o.body, $('input#secret').val());
+                $('input#value').val(decrypted);
+                $('#errors').text("");
+            }
+            catch(e) {
+                $('#errors').text("Error decrypting, passphrase may be incorrect");
+                $('input#value').val("");
+            }
+        });
+    });
+}
+
 function list_keys(){
     client = new RiakClient();
     var bucket = new RiakBucket('passwords', client);
     bucket.keys(function(keys){
-        $('#errors').text(JSON.stringify(keys))
+        var data = {'keys': keys};
+        var template = [['div',
+            data.keys.map(function(text){
+                return ['p', ['a', {'href': '#/fetch/'+text}, text]];
+            })
+        ]];
+        $('#key_list').html(microjungle(template));
     });
-
 }
+
+
+$(function() {
+    var routes = {
+        'list': list_keys,
+        'fetch': {
+            '/(\\w+)': {
+                on: function(key) {fetch(key);}
+            }
+        }
+    };
+    list_keys();
+});
