@@ -69,15 +69,15 @@ function list_keys(){
     });
 }
 
-
 $(function() {
     var routes = {
-        'list': list_keys,
-        'fetch': {
+        '/list': list_keys,
+        '/fetch': {
             '/(\\w+)': {
-                on: function(key) {fetch(key);}
+                on: function(key){fetch(key);}
             }
         }
     };
+    var router = Router(routes).init();
     list_keys();
 });
