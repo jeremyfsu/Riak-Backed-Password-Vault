@@ -59,7 +59,7 @@ function list_keys(){
     client = new RiakClient();
     var bucket = new RiakBucket('passwords', client);
     bucket.keys(function(keys){
-        var data = {'keys': keys};
+        var data = {'keys': keys.sort()};
         var template = [['div',
             data.keys.map(function(text){
                 return ['p', ['a', {'href': '#/fetch/'+text}, text]];
