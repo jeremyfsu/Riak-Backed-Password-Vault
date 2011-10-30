@@ -60,13 +60,43 @@ function list_keys(){
     var bucket = new RiakBucket('passwords', client);
     bucket.keys(function(keys){
         var data = {'keys': keys.sort()};
-        var template = [['div',
-            data.keys.map(function(text){
-                return ['p', ['a', {'href': '#/fetch/'+text}, text]];
-            })
-        ]];
-        $('#key_list').html(microjungle(template));
+        var template = [['div', {'id':'passphrase'},
+                            ['input', {'type':'button', 'value':'New Item', 'onclick':'new_item();'}],
+                            ['table',
+                                ['tr',
+                                    ['td', 'Passphrase:'],
+                                    ['td',
+                                        ['input', {'type':'password', 'id':'secret'}]]]]],
+                        ['div',
+                            data.keys.map(function(text){
+                                return ['p', ['a', {'href': '#/fetch/'+text}, text]];
+                            })
+                        ]];
+        $('#content').html(microjungle(template));
     });
+}
+
+function new_item(){
+    var template = [['table',
+                    ['tr',
+                        ['td', 'Account:'],
+                        ['td', ['input', {'type':'text', 'id':'key'}]]]
+                    ['tr',
+                        ['td', 'Passphrase:'],
+                        ['td', ['input', {'type':'password', 'id':'secret'}]]],
+                    ['tr',
+                        ['td', 'Username:'],
+                        ['td', ['input',{'type':'text', 'id':'username'}]]]
+                    ]];
+    $('#content').html(microjungle(template));
+
+
+//       Account:' <input type="text" id="key" /><br />
+//                Passphrase: <input type="password" id="enc_secret" /><br />
+//                Username: <input type="text" id="username" /><br/>
+//                Password: <input type="text" id="password"><br />
+//                Notes: <textarea rows=3 cols=20 id="notes"></textarea><br />
+//                <input type="button" value="Save" onclick="save();"/>
 }
 
 $(function() {
