@@ -55,6 +55,19 @@ function fetch(key){
     });
 }
 
+function store(){
+    client = new RiakClient();
+    client.bucket('passwords', function(bucket){
+        bucket.get_or_new($('input#key').val(), function(status, object){
+            encrypted = GibberishAES.enc($('input#value').val(), $('input#secret').val());
+            object.body = encrypted;
+            object.contentType = 'text/plain';
+            object.store();
+            $('input#value').val(encrypted);
+        });
+    });
+}
+
 function list_keys(){
     client = new RiakClient();
     var bucket = new RiakBucket('passwords', client);
@@ -78,30 +91,32 @@ function list_keys(){
 
 function new_item(){
     var template = [['table',
-                    ['tr',
-                        ['td', 'Account:'],
-                        ['td', ['input', {'type':'text', 'id':'key'}]]]
-                    ['tr',
-                        ['td', 'Passphrase:'],
-                        ['td', ['input', {'type':'password', 'id':'secret'}]]],
-                    ['tr',
-                        ['td', 'Username:'],
-                        ['td', ['input',{'type':'text', 'id':'username'}]]]
-                    ]];
+                        ['tr',
+                            ['td', 'Account:'],
+                            ['td', ['input', {'type':'text', 'id':'key'}]]],
+                        ['tr',
+                            ['td', 'Passphrase:'],
+                            ['td', ['input', {'type':'password', 'id':'secret'}]]],
+                        ['tr',
+                            ['td', 'Username:'],
+                            ['td', ['input',{'type':'text', 'id':'username'}]]],
+                        ['tr',
+                            ['td', 'Password:'],
+                            ['td', ['input',{'type':'text', 'id':'password'}]]],
+                        ['tr',
+                            ['td', 'Notes:'],
+                            ['td', ['textarea', {'rows':3, 'cols':20, 'id':'notes'}]]],
+                        ['tr',
+                            ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store();'}]]],
+                        ['tr',
+                            ['td', ['input', {'type':'button', 'value':'Cancel', 'onclick':'list_keys();'}]]]
+    ]];
     $('#content').html(microjungle(template));
 
-
-//       Account:' <input type="text" id="key" /><br />
-//                Passphrase: <input type="password" id="enc_secret" /><br />
-//                Username: <input type="text" id="username" /><br/>
-//                Password: <input type="text" id="password"><br />
-//                Notes: <textarea rows=3 cols=20 id="notes"></textarea><br />
-//                <input type="button" value="Save" onclick="save();"/>
 }
 
 $(function() {
     var routes = {
-        '/list': list_keys,
         '/fetch': {
             '/(\\w+)': {
                 on: function(key){fetch(key);}
