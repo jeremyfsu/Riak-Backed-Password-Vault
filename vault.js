@@ -44,22 +44,25 @@ function fetch(key){
         bucket.get(key, function(s,o){
             try {
                 decrypted = GibberishAES.dec(o.body, $('input#secret').val());
-                $('input#value').val(decrypted);
-                $('#errors').text("");
+                $('#errors').text(decrypted);
             }
             catch(e) {
                 $('#errors').text("Error decrypting, passphrase may be incorrect");
-                $('input#value').val("");
-            }
+            });
         });
-    });
+    };
 }
 
 function store(){
     client = new RiakClient();
     client.bucket('passwords', function(bucket){
         bucket.get_or_new($('input#key').val(), function(status, object){
-            encrypted = GibberishAES.enc($('input#value').val(), $('input#secret').val());
+            value = {
+                'username':$('input#username').val(),
+                'password':$('input#password').val(),
+                'notes':$('input#notes').val()
+            };
+            encrypted = GibberishAES.enc(value, $('input#secret').val());
             object.body = encrypted;
             object.contentType = 'text/plain';
             object.store();
