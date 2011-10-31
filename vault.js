@@ -48,9 +48,9 @@ function fetch(key){
             }
             catch(e) {
                 $('#errors').text("Error decrypting, passphrase may be incorrect");
-            });
+            }
         });
-    };
+    });
 }
 
 function store(){
@@ -66,9 +66,14 @@ function store(){
             object.body = encrypted;
             object.contentType = 'text/plain';
             object.store();
-            $('input#value').val(encrypted);
         });
     });
+    var template = [
+        ['p', 'Account info encrypted and stored'],
+        ['p', ['a', {'href':'#/list_keys'}, 'List Accounts']],
+        ['p', ['a', {'href':'#/new'}, 'Add another']]
+    ];
+    $('#content').html(microjungle(template));
 }
 
 function list_keys(){
@@ -77,7 +82,7 @@ function list_keys(){
     bucket.keys(function(keys){
         var data = {'keys': keys.sort()};
         var template = [['div', {'id':'passphrase'},
-                            ['input', {'type':'button', 'value':'New Item', 'onclick':'new_item();'}],
+                            ['a', {'href':'#/new'}, 'New Account'],
                             ['table',
                                 ['tr',
                                     ['td', 'Passphrase:'],
@@ -112,7 +117,7 @@ function new_item(){
                         ['tr',
                             ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store();'}]]],
                         ['tr',
-                            ['td', ['input', {'type':'button', 'value':'Cancel', 'onclick':'list_keys();'}]]]
+                            ['td', ['a', {'href':'#/list_keys'}, 'Cancel']]]
     ]];
     $('#content').html(microjungle(template));
 
@@ -124,8 +129,10 @@ $(function() {
             '/(\\w+)': {
                 on: function(key){fetch(key);}
             }
-        }
+        },
+        '/list_keys':list_keys,
+        '/new':new_item
     };
     var router = Router(routes).init();
-    list_keys();
+    window.location = '#/list_keys';
 });
