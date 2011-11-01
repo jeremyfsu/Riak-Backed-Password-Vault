@@ -42,14 +42,35 @@ function fetch(key){
     client = new RiakClient();
     client.bucket('passwords', function(bucket){
         bucket.get(key, function(s,o){
-//            try {
+            try {
                 decrypted = GibberishAES.dec(o.body, $('input#secret').val());
                 record = JSON.parse(decrypted);
-                $('#errors').text(record.username);
-//            }
-//            catch(e) {
-//                $('#errors').text("Error decrypting, passphrase may be incorrect");
-//            }
+                var template = [[
+                    ['table',
+                        ['tr',
+                            ['td', 'Account:'],
+                            ['td', key]
+                        ],
+                        ['tr',
+                            ['td', 'Username:'],
+                            ['td', record.username]
+                        ],
+                        ['tr',
+                            ['td', 'Password:'],
+                            ['td', record.password]
+                        ],
+                        ['tr',
+                            ['td', 'Notes:'],
+                            ['td', record.notes]
+                        ]
+                    ],
+                    ['a', {'href':'#/list_keys'}, 'List Records']
+                ]];
+                $('#content').html(microjungle(template));
+            }
+            catch(e) {
+                $('#errors').text("Error decrypting, passphrase may be incorrect");
+            }
         });
     });
 }
