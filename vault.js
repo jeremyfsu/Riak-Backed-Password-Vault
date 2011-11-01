@@ -42,13 +42,14 @@ function fetch(key){
     client = new RiakClient();
     client.bucket('passwords', function(bucket){
         bucket.get(key, function(s,o){
-            try {
+//            try {
                 decrypted = GibberishAES.dec(o.body, $('input#secret').val());
-                $('#errors').text(decrypted);
-            }
-            catch(e) {
-                $('#errors').text("Error decrypting, passphrase may be incorrect");
-            }
+                record = JSON.parse(decrypted);
+                $('#errors').text(record.username);
+//            }
+//            catch(e) {
+//                $('#errors').text("Error decrypting, passphrase may be incorrect");
+//            }
         });
     });
 }
@@ -57,23 +58,20 @@ function store(){
     client = new RiakClient();
     client.bucket('passwords', function(bucket){
         bucket.get_or_new($('input#key').val(), function(status, object){
-            value = {
+            record = {
                 'username':$('input#username').val(),
                 'password':$('input#password').val(),
-                'notes':$('input#notes').val()
+                'notes':$('textarea#notes').val()
             };
-            encrypted = GibberishAES.enc(value, $('input#secret').val());
+            encrypted = GibberishAES.enc(JSON.stringify(record), $('input#secret').val());
             object.body = encrypted;
             object.contentType = 'text/plain';
             object.store();
+            $('#errors').text('Account info encrypted and stored ');
         });
     });
-    var template = [
-        ['p', 'Account info encrypted and stored'],
-        ['p', ['a', {'href':'#/list_keys'}, 'List Accounts']],
-        ['p', ['a', {'href':'#/new'}, 'Add another']]
-    ];
-    $('#content').html(microjungle(template));
+
+    window.location = '#/list_keys';
 }
 
 function list_keys(){
