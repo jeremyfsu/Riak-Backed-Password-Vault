@@ -16,7 +16,12 @@ function list_keys(){
                         ],
                         ['div',
                             data.keys.map(function(text){
-                                return ['p', ['a', {'href': '#/fetch/'+text}, text]];
+                                return ['table',
+                                    ['tr',
+                                        ['td', ['a', {'href': '#/fetch/'+text}, text]],
+                                        ['td', ['a', {'href': '/riak/passwords/'+text, 'class':'delete'}, 'X']]
+                                    ]
+                                ];
                             })
                         ]
         ];
@@ -106,6 +111,23 @@ function store(){
 
     window.location = '#/list_keys';
 }
+
+//This function was borrowed from Rekon https://github.com/basho/rekon
+//I thought it was pretty darn slick plus it taught me some JQuery tricks
+$('a.delete').live('click', function(e){
+    var link = this;
+    e.preventDefault();
+    if(!confirm("Are you sure you want to delete:\n" + $(link).attr('href'))) { return; }
+
+    $.ajax({
+        type: 'DELETE',
+        url: $(link).attr('href')
+    }).success(function(){
+        $(link).closest('tr').remove();
+    }).error(function(){
+        alert('There was an error deleting this object from Riak.');
+    });
+});
 
 $(function() {
     var routes = {
