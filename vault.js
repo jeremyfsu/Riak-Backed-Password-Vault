@@ -60,7 +60,7 @@ function fetch(key){
                 $('#content').html(microjungle(template));
             }
             catch(e) {
-                $('#errors').text("Error decrypting, passphrase may be incorrect");
+                $('#errors').text(e);
             }
         });
     });
