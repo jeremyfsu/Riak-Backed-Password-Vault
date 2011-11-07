@@ -4,7 +4,6 @@ function list_keys(){
     bucket.keys(function(keys){
         var data = {'keys': keys.sort()};
         var template = [['div', {'id':'passphrase'},
-                            ['a', {'href':'#/new'}, 'New Account'],
                             ['table',
                                 ['tr',
                                     ['td', 'Passphrase:'],
@@ -23,6 +22,9 @@ function list_keys(){
                                     ]
                                 ];
                             })
+                        ],
+                        ['div', {'class':'new'},
+                            ['a', {'href':'#/new'}, 'New Account']
                         ]
         ];
         $('#content').html(microjungle(template));
