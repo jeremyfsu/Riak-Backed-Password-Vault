@@ -3,17 +3,7 @@ function list_keys(){
     var bucket = new RiakBucket('passwords', client);
     bucket.keys(function(keys){
         var data = {'keys': keys.sort()};
-        var template = [['div', {'id':'passphrase'},
-                            ['table',
-                                ['tr',
-                                    ['td', 'Passphrase:'],
-                                    ['td',
-                                        ['input', {'type':'password', 'id':'secret'}]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        ['div',
+        var template = [['div',
                             data.keys.map(function(text){
                                 return ['table',
                                     ['tr',
@@ -28,6 +18,8 @@ function list_keys(){
                         ]
         ];
         $('#content').html(microjungle(template));
+        $('#errors').text('');
+
     });
 }
 
@@ -39,6 +31,7 @@ function fetch(key){
                 decrypted = GibberishAES.dec(o.body, $('input#secret').val());
                 record = JSON.parse(decrypted);
                 var template = [[
+                    ['input', {'type':'hidden', 'id':'key', 'value':key}],
                     ['table',
                         ['tr',
                             ['td', 'Account:'],
@@ -46,23 +39,28 @@ function fetch(key){
                         ],
                         ['tr',
                             ['td', 'Username:'],
-                            ['td', record.username]
+                            ['td', ['input',{'type':'text', 'id':'username', 'value':record.username}]]
                         ],
                         ['tr',
                             ['td', 'Password:'],
-                            ['td', record.password]
+                            ['td', ['input',{'type':'text', 'id':'password', 'value':record.password}]]
                         ],
                         ['tr',
                             ['td', 'Notes:'],
-                            ['td', record.notes]
+                            ['td', ['textarea', {'rows':3, 'cols':20, 'id':'notes', 'value':record.notes}]]
+                        ],
+                        ['tr',
+                            ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store();'}]]
                         ]
                     ],
                     ['a', {'href':'#/list_keys'}, 'List Records']
                 ]];
                 $('#content').html(microjungle(template));
+                $('#errors').text('');
+
             }
             catch(e) {
-                $('#errors').text(e);
+                window.location = '#/error/' + escape(e);
             }
         });
     });
@@ -73,9 +71,6 @@ function new_item(){
                         ['tr',
                             ['td', 'Account:'],
                             ['td', ['input', {'type':'text', 'id':'key'}]]],
-                        ['tr',
-                            ['td', 'Passphrase:'],
-                            ['td', ['input', {'type':'password', 'id':'secret'}]]],
                         ['tr',
                             ['td', 'Username:'],
                             ['td', ['input',{'type':'text', 'id':'username'}]]],
@@ -91,6 +86,7 @@ function new_item(){
                             ['td', ['a', {'href':'#/list_keys'}, 'Cancel']]]
     ]];
     $('#content').html(microjungle(template));
+    $('#errors').text('');
 
 }
 
@@ -107,7 +103,7 @@ function store(){
             object.body = encrypted;
             object.contentType = 'text/plain';
             object.store();
-            $('#errors').text('Account info encrypted and stored ');
+            $('#errors').text('Account info encrypted and stored');
         });
     });
 
@@ -131,6 +127,10 @@ $('a.delete').live('click', function(e){
     });
 });
 
+function error(msg){
+    $('#errors').text(unescape(msg));
+}
+
 $(function() {
     var routes = {
         '/fetch': {
@@ -139,7 +139,12 @@ $(function() {
             }
         },
         '/list_keys':list_keys,
-        '/new':new_item
+        '/new':new_item,
+        '/error': {
+            '/(.*)' : {
+                on: function(msg){error(msg);}
+            }
+        }
     };
     var router = Router(routes).init();
     window.location = '#/list_keys';
