@@ -47,7 +47,7 @@ function fetch(key){
                         ],
                         ['tr',
                             ['td', 'Notes:'],
-                            ['td', ['textarea', {'rows':3, 'cols':20, 'id':'notes', 'value':record.notes}]]
+                            ['td', ['textarea', {'rows':3, 'cols':20, 'id':'notes'}, record.notes]]
                         ],
                         ['tr',
                             ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store();'}]]
