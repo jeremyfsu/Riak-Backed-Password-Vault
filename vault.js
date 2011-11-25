@@ -1,6 +1,6 @@
-function list_keys(){
+function list_keys(bucket){
     client = new RiakClient();
-    var bucket = new RiakBucket('passwords', client);
+    var bucket = new RiakBucket(bucket, client);
     bucket.keys(function(keys){
         var data = {'keys': keys.sort()};
         var template = [['div',
@@ -8,7 +8,7 @@ function list_keys(){
                                 return ['table',
                                     ['tr',
                                         ['td', ['a', {'href': '#/fetch/'+text}, unescape(text)]],
-                                        ['td', ['a', {'href': '/riak/passwords/'+text, 'class':'delete'}, 'X']]
+                                        ['td', ['a', {'href': '/riak/'+bucket+'/'+text, 'class':'delete'}, 'X']]
                                     ]
                                 ];
                             })
@@ -23,9 +23,9 @@ function list_keys(){
     });
 }
 
-function fetch(key){
+function fetch(bucket, key){
     client = new RiakClient();
-    client.bucket('passwords', function(bucket){
+    client.bucket(bucket, function(bucket){
         bucket.get(key, function(s,o){
             try {
                 decrypted = GibberishAES.dec(o.body, $('input#secret').val());
@@ -50,7 +50,7 @@ function fetch(key){
                             ['td', ['textarea', {'rows':3, 'cols':20, 'id':'notes'}, record.notes]]
                         ],
                         ['tr',
-                            ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store();'}]]
+                            ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store('+bucket+');'}]]
                         ]
                     ],
                     ['a', {'href':'#/list_keys'}, 'List Records']
@@ -66,7 +66,7 @@ function fetch(key){
     });
 }
 
-function new_item(){
+function new_item(bucket){
     var template = [['table',
                         ['tr',
                             ['td', 'Account:'],
@@ -81,7 +81,7 @@ function new_item(){
                             ['td', 'Notes:'],
                             ['td', ['textarea', {'rows':3, 'cols':20, 'id':'notes'}]]],
                         ['tr',
-                            ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store();'}]]],
+                            ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store('+bucket+');'}]]],
                         ['tr',
                             ['td', ['a', {'href':'#/list_keys'}, 'Cancel']]]
     ]];
@@ -90,9 +90,9 @@ function new_item(){
 
 }
 
-function store(){
+function store(bucket){
     client = new RiakClient();
-    client.bucket('passwords', function(bucket){
+    client.bucket(bucket, function(bucket){
         bucket.get_or_new($('input#key').val(), function(status, object){
             record = {
                 'username':$('input#username').val(),
@@ -133,13 +133,19 @@ function error(msg){
 
 $(function() {
     var routes = {
-        '/fetch': {
+        '/fetch/?([^\/]*)\/([^\/]*)/?': {
+            on: function(bucket,key){fetch(bucket, key);}
+        },
+        '/list_keys': {
             '/(\\w+)': {
-                on: function(key){fetch(key);}
+                on: function(bucket){list_keys(bucket);}
             }
         },
-        '/list_keys':list_keys,
-        '/new':new_item,
+        '/new': {
+            '/(\\w+)': {
+                on: function(bucket){new_item(bucket);}
+            }
+        },
         '/error': {
             '/(.*)' : {
                 on: function(msg){error(msg);}
