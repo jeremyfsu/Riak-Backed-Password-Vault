@@ -1,6 +1,6 @@
 function list_keys(){
     client = new RiakClient();
-    var bucket = new RiakBucket('passwords', client);
+    var bucket = new RiakBucket(window.bucket, client);
     bucket.keys(function(keys){
         var data = {'keys': keys.sort()};
         var template = [['div',
@@ -25,7 +25,7 @@ function list_keys(){
 
 function fetch(key){
     client = new RiakClient();
-    client.bucket('passwords', function(bucket){
+    client.bucket(window.bucket, function(bucket){
         bucket.get(key, function(s,o){
             try {
                 decrypted = GibberishAES.dec(o.body, $('input#secret').val());
@@ -92,7 +92,7 @@ function new_item(){
 
 function store(){
     client = new RiakClient();
-    client.bucket('passwords', function(bucket){
+    client.bucket(window.bucket, function(bucket){
         bucket.get_or_new($('input#key').val(), function(status, object){
             record = {
                 'username':$('input#username').val(),
@@ -107,7 +107,7 @@ function store(){
         });
     });
 
-    window.location = '#/list_keys';
+    window.location = '/riak/vault/index.html';
 }
 
 //This function was borrowed from Rekon https://github.com/basho/rekon
@@ -132,6 +132,7 @@ function error(msg){
 }
 
 $(function() {
+    window.bucket = 'passwords';
     var routes = {
         '/fetch': {
             '/(\\w+)': {
