@@ -19,7 +19,6 @@ function list_keys(){
         ];
         $('#content').html(microjungle(template));
         $('#errors').text('');
-
     });
 }
 
@@ -83,11 +82,10 @@ function new_item(){
                         ['tr',
                             ['td', ['input', {'type':'button', 'value':'Store', 'onclick':'store();'}]]],
                         ['tr',
-                            ['td', ['a', {'href':'#/list_keys'}, 'Cancel']]]
+                            ['td', ['a', {'href':'#/list_keys'}, 'List Accounts']]]
     ]];
     $('#content').html(microjungle(template));
     $('#errors').text('');
-
 }
 
 function store(){
@@ -103,11 +101,10 @@ function store(){
             object.body = encrypted;
             object.contentType = 'text/plain';
             object.store();
-            $('#errors').text('Account info encrypted and stored');
         });
     });
 
-    window.location = '/riak/vault/index.html';
+    window.location = '#/error/' + escape('Account info encrypted and stored');
 }
 
 //This function was borrowed from Rekon https://github.com/basho/rekon
