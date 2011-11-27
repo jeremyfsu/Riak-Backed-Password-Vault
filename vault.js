@@ -5,11 +5,9 @@ function list_keys(){
         var data = {'keys': keys.sort()};
         var template = [['div',
                             data.keys.map(function(text){
-                                return ['table',
-                                    ['tr',
-                                        ['td', ['a', {'href': '#/fetch/'+text}, unescape(text)]],
-                                        ['td', ['a', {'href': '/riak/passwords/'+text, 'class':'delete'}, 'X']]
-                                    ]
+                                return ['div', {'class':'account'},
+                                    ['a', {'href': '#/fetch/'+text}, unescape(text)],
+                                    ['a', {'href': '/riak/passwords/'+text, 'class':'delete'}, 'X']
                                 ];
                             })
                         ],

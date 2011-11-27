@@ -6,3 +6,4 @@ curl -v -X PUT -T microjungle.min.js -H "Content-type: text/javascript" http://l
 curl -v -X PUT -T SS.min.js -H "Content-type: text/javascript" http://localhost:8098/riak/vault/SS.min.js
 curl -v -X PUT -T vault.js -H "Content-type: text/javascript" http://localhost:8098/riak/vault/vault.js
 curl -v -X PUT -T index.html -H "Content-type: text/html" http://localhost:8098/riak/vault/index.html
+curl -v -X PUT -T vault.css -H "Content-type: text/html" http://locahost:8098/riak/vault/vault.css
