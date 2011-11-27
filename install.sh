@@ -17,4 +17,4 @@ curl -v -X PUT -T microjungle.min.js -H "Content-type: text/javascript" http://$
 curl -v -X PUT -T SS.min.js -H "Content-type: text/javascript" http://$node/riak/$bucket/SS.min.js
 curl -v -X PUT -T vault.js -H "Content-type: text/javascript" http://$node/riak/$bucket/vault.js
 curl -v -X PUT -T index.html -H "Content-type: text/html" http://$node/riak/$bucket/index.html
-curl -v -X PUT -T vault.css -H "Content-type: text/html" http://$node/riak/$bucket/vault.css
+curl -v -X PUT -T vault.css -H "Content-type: text/css" http://$node/riak/$bucket/vault.css
