@@ -21,12 +21,10 @@ respectively.  I found both of these on microjs.com.
 
 Also adding the ability to list the accounts and enabling "one-click" decryption. 
 
-Other things I'd like to add next:
-1. JSON in the body rather than free text, abstracted to the UI with a form, fields would be username, password, 
-notes?
-2. Passphrase timeout - blanks your passphrase field after a few minutes in case you leave your computer 
+Other things I'd like to add:
+1. Passphrase timeout - blanks your passphrase field after a few minutes in case you leave your computer
 unattended.
-3. Styling - make it look purty!
+2. Passphrase confirmation - have user type the passphrase twice to confirm it when saving a new record
 
 
 
