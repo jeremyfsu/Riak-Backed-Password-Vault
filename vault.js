@@ -3,18 +3,21 @@ function list_keys(){
     var bucket = new RiakBucket(window.bucket, client);
     bucket.keys(function(keys){
         var data = {'keys': keys.sort()};
-        var template = [['div',
+        var template = [['table',
                             data.keys.map(function(text){
-                                return ['div', {'class':'account'},
-                                    ['a', {'href': '#/fetch/'+text}, unescape(text)],
-                                    ['a', {'href': '/riak/passwords/'+text, 'class':'delete'}, 'X']
-                                ];
+                                return ['tr',
+                                    ['td',
+                                        ['div', {'class':'account'},
+                                            ['a', {'href': '#/fetch/'+text}, unescape(text)]
+                                        ]
+                                    ],
+                                    ['td',
+                                        ['a', {'href': '/riak/passwords/'+text, 'class':'delete', 'id':text}, 'X']
+                                    ]
+                                ]
                             })
-                        ],
-                        ['div', {'class':'new'},
-                            ['a', {'href':'#/new'}, 'New Account']
-                        ]
-        ];
+                        ]];
+        template.push(['a', {'href':'#/new', 'class':'default'}, 'New Account']);
         $('#content').html(microjungle(template));
         $('#errors').text('');
     });
@@ -110,7 +113,7 @@ function store(){
 $('a.delete').live('click', function(e){
     var link = this;
     e.preventDefault();
-    if(!confirm("Are you sure you want to delete:\n" + $(link).attr('href'))) { return; }
+    if(!confirm("Are you sure you want to delete the account\n" + $(link).attr('id') + '?')) { return; }
 
     $.ajax({
         type: 'DELETE',
@@ -130,7 +133,7 @@ $(function() {
     window.bucket = 'passwords';
     var routes = {
         '/fetch': {
-            '/(\\w+)': {
+            '/(.*)': {
                 on: function(key){fetch(key);}
             }
         },

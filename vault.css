@@ -12,12 +12,25 @@ body {
     column-width:10px;
     column-gap:px
 }
+
+a:link, a:visited {
+    text-decoration:none;
+    color: #fff;
+}
+
 .account {
     box-shadow:2px 2px 2px #000000;
     border-radius:1em;
     background-color: #8EE827;
-    color: #000000;
-    width: 10em;
-    margin: 1;
-
+    color: #000;
+    padding: 0.5em;
 }
+
+.account a:link, .account a:visited {
+    text-decoration:none;
+    color: #000;
+}
+
+
+
+
