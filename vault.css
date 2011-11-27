@@ -1,0 +1,23 @@
+body {
+    -webkit-text-size-adjust: none;
+    margin: 1;
+    background: #333;
+    min-height: 100%;
+    font-weight: normal;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20.0px;
+    line-height: 140%;
+    column-count:2;
+    column-width:10px;
+    column-gap:px
+}
+.account {
+    box-shadow:2px 2px 2px #000000;
+    border-radius:1em;
+    background-color: #8EE827;
+    color: #000000;
+    width: 10em;
+    margin: 1;
+
+}
