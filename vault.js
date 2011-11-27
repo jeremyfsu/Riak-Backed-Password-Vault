@@ -12,7 +12,7 @@ function list_keys(){
                                         ]
                                     ],
                                     ['td',
-                                        ['a', {'href': '/riak/passwords/'+text, 'class':'delete', 'id':text}, 'X']
+                                        ['a', {'href': '/riak/'+window.bucket+'/'+text, 'class':'delete', 'id':text}, 'X']
                                     ]
                                 ]
                             })
